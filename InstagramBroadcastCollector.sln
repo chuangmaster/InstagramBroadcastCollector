@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstagramBroadcastCollector", "InstagramBroadcastCollector\InstagramBroadcastCollector.csproj", "{AE50C520-2959-4DEF-9FF7-B7249A5D2ADE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE50C520-2959-4DEF-9FF7-B7249A5D2ADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE50C520-2959-4DEF-9FF7-B7249A5D2ADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE50C520-2959-4DEF-9FF7-B7249A5D2ADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE50C520-2959-4DEF-9FF7-B7249A5D2ADE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1886E8F2-CCB1-45D8-97D9-A4E371A64B9B}
+	EndGlobalSection
+EndGlobal
