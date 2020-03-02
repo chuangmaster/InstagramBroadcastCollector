@@ -39,7 +39,6 @@ namespace InstagramBroadcastCollector
             {
                 return false;
             }
-            await _InstaApi.LogoutAsync();
             return true;
         }
 
