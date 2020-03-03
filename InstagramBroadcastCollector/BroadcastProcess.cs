@@ -26,14 +26,23 @@ namespace InstagramBroadcastCollector
             {
                 // find live id 
                 var broadcastId = await FindLivePageId(targetPageName);
-                // get comments
-                var datas = await GetLiveComments(broadcastId);
 
-                string json = JsonConvert.SerializeObject(datas);
+                if (!string.IsNullOrEmpty(broadcastId))
+                {
+                    // get comments
+                    var data = await GetLiveComments(broadcastId);
 
-                string filePath = await WriteJson(json);
+                    string json = JsonConvert.SerializeObject(data);
 
-                Console.WriteLine($"your file is {filePath}");
+                    string filePath = await WriteJson(json);
+
+                    Console.WriteLine($"your file is {filePath}");
+                }
+                else
+                {
+                    Console.WriteLine("There is no broadcast page on your Instagram account.");
+                }
+                
             }
             catch (Exception e)
             {
@@ -50,19 +59,25 @@ namespace InstagramBroadcastCollector
         private async Task<string> FindLivePageId(string targetPageName)
         {
             var broadcastId = string.Empty;
-            //get current live page
-            var getBrodcastResult = await _InstaApi.LiveProcessor.GetSuggestedBroadcastsAsync();
-            if (getBrodcastResult.Succeeded)
+            int times = 5;
+            while (times-- > 0)
             {
-                var targetBroadcast = getBrodcastResult.Value.
-                    FirstOrDefault(x => x.BroadcastOwner.UserName == targetPageName);
-                if (targetBroadcast != null)
+                //get current live page
+                var getBroadcastResult = await _InstaApi.LiveProcessor.GetSuggestedBroadcastsAsync();
+                if (getBroadcastResult.Succeeded)
                 {
-                    broadcastId = targetBroadcast.Id;
+                    var targetBroadcast = getBroadcastResult.Value.
+                        FirstOrDefault(x => x.BroadcastOwner.UserName == targetPageName);
+                    if (targetBroadcast != null)
+                    {
+                        broadcastId = targetBroadcast.Id;
+                        break;
+                    }
                 }
+                else
+                    Console.WriteLine("Error while suggested broadcasts: " + getBroadcastResult.Info.Message);
+                Thread.Sleep(5000);
             }
-            else
-                Console.WriteLine("Error while suggested broadcasts: " + getBrodcastResult.Info.Message);
             return broadcastId;
         }
 
