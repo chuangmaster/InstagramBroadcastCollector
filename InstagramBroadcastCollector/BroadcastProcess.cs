@@ -26,14 +26,23 @@ namespace InstagramBroadcastCollector
             {
                 // find live id 
                 var broadcastId = await FindLivePageId(targetPageName);
-                // get comments
-                var datas = await GetLiveComments(broadcastId);
 
-                string json = JsonConvert.SerializeObject(datas);
+                if (!string.IsNullOrEmpty(broadcastId))
+                {
+                    // get comments
+                    var datas = await GetLiveComments(broadcastId);
 
-                string filePath = await WriteJson(json);
+                    string json = JsonConvert.SerializeObject(datas);
 
-                Console.WriteLine($"your file is {filePath}");
+                    string filePath = await WriteJson(json);
+
+                    Console.WriteLine($"your file is {filePath}");
+                }
+                else
+                {
+                    Console.WriteLine("There is no broadcast page on your Instagram account.");
+                }
+                
             }
             catch (Exception e)
             {
