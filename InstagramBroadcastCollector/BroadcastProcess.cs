@@ -52,10 +52,10 @@ namespace InstagramBroadcastCollector
         {
             var broadcastId = string.Empty;
             //get current live page
-            var getBrodcastResult = await _InstaApi.LiveProcessor.GetSuggestedBroadcastsAsync();
-            if (getBrodcastResult.Succeeded)
+            var getBroadcastResult = await _InstaApi.LiveProcessor.GetSuggestedBroadcastsAsync();
+            if (getBroadcastResult.Succeeded)
             {
-                var targetBroadcast = getBrodcastResult.Value.
+                var targetBroadcast = getBroadcastResult.Value.
                     FirstOrDefault(x => x.BroadcastOwner.UserName == targetPageName);
                 if (targetBroadcast != null)
                 {
@@ -63,7 +63,7 @@ namespace InstagramBroadcastCollector
                 }
             }
             else
-                Console.WriteLine("Error while suggested broadcasts: " + getBrodcastResult.Info.Message);
+                Console.WriteLine("Error while suggested broadcasts: " + getBroadcastResult.Info.Message);
             return broadcastId;
         }
 
