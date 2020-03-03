@@ -30,9 +30,9 @@ namespace InstagramBroadcastCollector
                 if (!string.IsNullOrEmpty(broadcastId))
                 {
                     // get comments
-                    var datas = await GetLiveComments(broadcastId);
+                    var data = await GetLiveComments(broadcastId);
 
-                    string json = JsonConvert.SerializeObject(datas);
+                    string json = JsonConvert.SerializeObject(data);
 
                     string filePath = await WriteJson(json);
 
