@@ -51,19 +51,25 @@ namespace InstagramBroadcastCollector
         private async Task<string> FindLivePageId(string targetPageName)
         {
             var broadcastId = string.Empty;
-            //get current live page
-            var getBroadcastResult = await _InstaApi.LiveProcessor.GetSuggestedBroadcastsAsync();
-            if (getBroadcastResult.Succeeded)
+            int times = 5;
+            while (times-- > 0)
             {
-                var targetBroadcast = getBroadcastResult.Value.
-                    FirstOrDefault(x => x.BroadcastOwner.UserName == targetPageName);
-                if (targetBroadcast != null)
+                //get current live page
+                var getBroadcastResult = await _InstaApi.LiveProcessor.GetSuggestedBroadcastsAsync();
+                if (getBroadcastResult.Succeeded)
                 {
-                    broadcastId = targetBroadcast.Id;
+                    var targetBroadcast = getBroadcastResult.Value.
+                        FirstOrDefault(x => x.BroadcastOwner.UserName == targetPageName);
+                    if (targetBroadcast != null)
+                    {
+                        broadcastId = targetBroadcast.Id;
+                        break;
+                    }
                 }
+                else
+                    Console.WriteLine("Error while suggested broadcasts: " + getBroadcastResult.Info.Message);
+                Thread.Sleep(5000);
             }
-            else
-                Console.WriteLine("Error while suggested broadcasts: " + getBroadcastResult.Info.Message);
             return broadcastId;
         }
 
