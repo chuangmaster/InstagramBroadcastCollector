@@ -23,8 +23,31 @@ namespace InstagramBroadcastCollector
             var userName = Console.ReadLine();
             Console.WriteLine();
             Console.Write("Input your instagram Password:");
-            var password = Console.ReadLine();
-            Console.WriteLine();
+            string password = string.Empty;
+            do
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+                else if (key.Key == ConsoleKey.Backspace)
+                {
+                    if (password.Length > 0)
+                    {
+                        password = password.Substring(0, password.Length - 1);
+                        Console.Write("\b \b");
+                    }
+                }
+                else if (key.KeyChar != '\u0000') // KeyChar == '\u0000' if the key pressed does not correspond to a printable character, e.g. F1, Pause-Break, etc
+                {
+                    password += key.KeyChar;
+                    Console.Write("*");
+                }
+            } while (true);
+            Console.WriteLine("\n\r");
+
+
             Console.Write("Input your instagram target page name:");
             var targetPageName = Console.ReadLine();
 
@@ -52,7 +75,7 @@ namespace InstagramBroadcastCollector
 
             var api = InstaApiBuilder.CreateBuilder()
                 .SetUser(userSession)
-                .UseLogger(new DebugLogger(LogLevel.All))
+                //.UseLogger(new DebugLogger(LogLevel.All))
                 .SetRequestDelay(delay)
                 // Session handler, set a file path to save/load your state/session data
                 .SetSessionHandler(new FileSessionHandler() { FilePath = StateFile })
