@@ -15,6 +15,7 @@ If login result is ChallengeRequired, you will be ask choose a way to get verifi
 # Version
 2020030501
 * [Update] Hidie password when user are tying. 
+
 2020030502
 * [Update] Make application to check target page live status 5 times in 25 seconds.
 
