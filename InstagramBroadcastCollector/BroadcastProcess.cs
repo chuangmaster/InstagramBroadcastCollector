@@ -29,26 +29,42 @@ namespace InstagramBroadcastCollector
 
                 if (!string.IsNullOrEmpty(broadcastId))
                 {
+                    List<InstagramCommentDTO> data = new List<InstagramCommentDTO>();
                     // get comments
-                    var data = await GetLiveComments(broadcastId);
+                    GetLiveComments(broadcastId, data);
+                    ConsoleKey key;
+                    do
+                    {
+                        Console.WriteLine("Press S to save current live comments, Q to quit.");
+                        key = Console.ReadKey().Key;
+                        Console.WriteLine();
 
-                    string json = JsonConvert.SerializeObject(data);
+                        if (key == ConsoleKey.S)
+                        {
+                            string json = JsonConvert.SerializeObject(data);
+                            string filePath = await WriteJson(json);
+                            Console.WriteLine($"your file is {filePath}");
+                        }
+                        else if (key == ConsoleKey.Q)
+                        {
+                            Console.WriteLine("quit the application.");
+                            break;
+                        }
 
-                    string filePath = await WriteJson(json);
+                        await Task.Delay(1000);
 
-                    Console.WriteLine($"your file is {filePath}");
+                    } while (true);
                 }
                 else
                 {
                     Console.WriteLine("There is no broadcast page on your Instagram account.");
                 }
-                
+
             }
             catch (Exception e)
             {
                 return false;
             }
-            await _InstaApi.LogoutAsync();
             return true;
         }
 
@@ -87,9 +103,8 @@ namespace InstagramBroadcastCollector
         /// </summary>
         /// <param name="broadcastId"></param>
         /// <returns></returns>
-        private async Task<List<InstagramCommentDTO>> GetLiveComments(string broadcastId)
+        private async Task GetLiveComments(string broadcastId, List<InstagramCommentDTO> data)
         {
-            List<InstagramCommentDTO> datas = new List<InstagramCommentDTO>();
 
             var gtm = new DateTime(1970, 1, 1);
             var now = DateTime.UtcNow;
@@ -104,7 +119,7 @@ namespace InstagramBroadcastCollector
                     for (int i = 0; i < comments.Count; i++)
                     {
                         Console.WriteLine($"[{comments[i].Pk}]{comments[i].User.UserName} said: {comments[i].Text}");
-                        datas.Add(new InstagramCommentDTO()
+                        data.Add(new InstagramCommentDTO()
                         {
                             Pk = comments[i].Pk,
                             UserName = comments[i].User.UserName,
@@ -117,16 +132,24 @@ namespace InstagramBroadcastCollector
                             now = comments[i].CreatedAtUtc;
                         }
                     }
-                    Thread.Sleep(2000);
+                    await Task.Delay(2000);
                 }
                 else
                 {
-                    Console.WriteLine("Broadcast maybe was not existed.");
+                    if (data.Count > 0)
+                    {
+                        Console.WriteLine("Broadcast has stopped.");
+                        string json = JsonConvert.SerializeObject(data);
+                        string filePath = await WriteJson(json);
+                        Console.WriteLine($"your file is {filePath}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Broadcast maybe was not existed.");
+                    }
                     break;
                 }
             }
-
-            return datas;
         }
 
         private async Task<string> WriteJson(string jsonContent)
