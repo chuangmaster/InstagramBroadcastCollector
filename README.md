@@ -13,6 +13,9 @@ Application saves a bin file after login. This file lets application doesn't nee
 If login result is ChallengeRequired, you will be ask choose a way to get verification code. You will login after input your verification from your source that you chose.<br>
 
 # Version
+2020031601
+* [Add] Add two factor validation.
+
 2020031001
 * [Update] Make application press button to save json file when page is liveing.
 

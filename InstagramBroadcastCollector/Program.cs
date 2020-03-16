@@ -175,6 +175,14 @@ namespace InstagramBroadcastCollector
                             Console.WriteLine("Challenge error");
                         }
                     }
+                    else if (logInResult.Value == InstaLoginResult.TwoFactorRequired)
+                    {
+                        // send verification code to phone number
+                        var phoneNumber = await api.RequestVerifyCodeToSMSForChallengeRequireAsync();
+                        var verifiedResult = await VerifiedCodeAsync(api);
+                        Console.WriteLine(verifiedResult ? "Login success!" : "Login fail!");
+                    }
+
                 }
             }
             var state = api.GetStateDataAsStream();
