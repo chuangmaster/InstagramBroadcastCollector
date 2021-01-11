@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using InstagramApiSharp;
 using InstagramApiSharp.API;
 using InstagramApiSharp.Classes;
 using InstagramBroadcastCollector.Models;
@@ -80,20 +81,38 @@ namespace InstagramBroadcastCollector
             while (times-- > 0)
             {
                 //get current live page
-                var getBroadcastResult = await _InstaApi.LiveProcessor.GetSuggestedBroadcastsAsync();
-                if (getBroadcastResult.Succeeded)
+                var getBroadcastResult = await _InstaApi.DiscoverProcessor.SearchPeopleAsync(targetPageName, 10);
+                var userId = getBroadcastResult.Value.Users[0].Pk;
+                //var temp2 = await _InstaApi.StoryProcessor.GetUserStoryFeedAsync(temp);
+                var temp2 = await _InstaApi.StoryProcessor.GetStoryFeedAsync();
+                foreach (var broadcast in temp2.Value.Broadcasts)
                 {
-                    var targetBroadcast = getBroadcastResult.Value.
-                        FirstOrDefault(x => x.BroadcastOwner.UserName == targetPageName);
-                    if (targetBroadcast != null)
+                    var parse = broadcast.MediaId.Split('_');
+                    if (parse.Length != 2)
                     {
-                        broadcastId = targetBroadcast.Id;
-                        break;
+                        continue;
+                    }
+                    if (long.Parse(parse[1]) == userId)  //broadcastid_UserId
+                    {
+                        return broadcast.Id;
                     }
                 }
-                else
-                    Console.WriteLine("Error while suggested broadcasts: " + getBroadcastResult.Info.Message);
-                Thread.Sleep(5000);
+               
+                //var getBroadcastResult = await _InstaApi.DiscoverProcessor.SearchPeopleAsync(targetPageName, 10);
+
+                //if (getBroadcastResult.Succeeded)
+                //{
+                //    var targetBroadcast = getBroadcastResult.Value.
+                //        FirstOrDefault(x => x.BroadcastOwner.UserName == targetPageName);
+                //    if (targetBroadcast != null)
+                //    {
+                //        broadcastId = targetBroadcast.Id;
+                //        break;
+                //    }
+                //}
+                //else
+                //    Console.WriteLine("Error while suggested broadcasts: " + getBroadcastResult.Info.Message);
+                //Thread.Sleep(5000);
             }
             return broadcastId;
         }
